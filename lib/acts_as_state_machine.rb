@@ -5,6 +5,8 @@ module ScottBarron                   #:nodoc:
       end
       class NoInitialState < Exception #:nodoc:
       end
+      class InvalidTransition < Exception #:nodoc:
+      end
       
       def self.included(base)        #:nodoc:
         base.extend ActMacro
@@ -93,6 +95,7 @@ module ScottBarron                   #:nodoc:
             next_states(record).each do |transition|
               break true if transition.perform(record)
             end
+            raise ScottBarron::Acts::StateMachine::InvalidTransition.new "Unable to fire transition '#{name}' from current state '#{record.current_state}'"
           end
           
           def transitions(trans_opts)
